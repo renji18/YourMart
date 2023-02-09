@@ -42,7 +42,7 @@ const productSchema = new mongoose.Schema({
         required: true,
       },
       name: {
-        type: String,
+        type: String, 
         required: true,
       },
       rating: {
@@ -55,13 +55,24 @@ const productSchema = new mongoose.Schema({
       }
     }
   ],
-  ratings: {
+  overallRating: {
     type: Number,
     default: 0,
   },
   numOfReviews: {
     type: Number,
     default: 0,
+  },
+  creator:{
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'UserSchema',
+      required: true,
+    },
+    name: {
+      type: String, 
+      required: true,
+    },
   }
 })
 

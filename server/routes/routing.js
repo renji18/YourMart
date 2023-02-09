@@ -40,7 +40,7 @@ const {
 
 // User Routes
 router.route('/user/register').post(registerUser)
-router.route('/user/login').post(userLogin)
+router.route('/user/login').post(userLogin) 
 router.route('/user/profile').get(auth, getUserProfile)
 router.route('/user/profiles').get(auth, admin, getAllUsers)  // ADMIN ONLY
 router.route('/user/profile/update').put(auth, updateProfile)
@@ -63,6 +63,8 @@ const {
   getAllProducts,
   deleteProduct,
   createReview,
+  getProductReviews,
+  deleteReview,
 
 } = require('../controllers/productController')
 
@@ -72,7 +74,9 @@ router.route('/product/update/:_id').put(auth, admin, updateProduct) // ADMIN ON
 router.route('/product/:_id').get(auth, getOneProduct)
 router.route('/products').get(auth, getAllProducts)
 router.route('/product/delete/:_id').delete(auth, admin, deleteProduct) // ADMIN ONLY
-router.route('/product/writeReview/:_id').post(auth, createReview)
+router.route('/product/writeReview/:_id').post(auth, createReview) 
+router.route('/product/getReviews/:_id').get(auth, getProductReviews) 
+router.route('/product/deleteReviews/:_id').delete(auth, admin, deleteReview) // ADMIN ONLY
 
 
 
