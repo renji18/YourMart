@@ -30,6 +30,16 @@ const userSchema = new mongoose.Schema({
     type:String,
     default:'user'
   },
+  image:{
+    public_id:{
+      type:String,
+      required:true,
+    },
+    url:{
+      type:String,
+      required:true
+    }
+  },
   address:{
     floorApartment:String,
     societyStreet:String,
