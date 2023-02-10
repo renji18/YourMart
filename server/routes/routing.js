@@ -6,6 +6,8 @@ const router  = express.Router()
 
 
 
+// Root Controller
+
 const homeRoute = async(req, res, next) => {
   try {
     const {yourmart} = req.cookies
@@ -77,6 +79,31 @@ router.route('/product/delete/:_id').delete(auth, admin, deleteProduct) // ADMIN
 router.route('/product/writeReview/:_id').post(auth, createReview) 
 router.route('/product/getReviews/:_id').get(auth, getProductReviews) 
 router.route('/product/deleteReviews/:_id').delete(auth, admin, deleteReview) // ADMIN ONLY
+
+
+
+
+
+// Order Controllers
+
+const {
+  createOrder,
+  getSingleOrder,
+  getMyOrder,
+  getAllOrders,
+  updateOrderStatus,
+  deleteOrder,
+
+} = require('../controllers/orderController')
+
+// Order Routes
+router.route('/order/create').post(auth, createOrder)
+router.route('/order/:_id').get(auth, getSingleOrder)
+router.route('/user/orders').get(auth, getMyOrder)
+router.route('/admin/orders').get(auth, admin, getAllOrders) // ADMIN ONLY
+router.route('/order/updateStatus/:_id').put(auth, admin, updateOrderStatus) // ADMIN ONLY
+router.route('/order/delete/:_id').delete(auth, admin, deleteOrder) // ADMIN ONLY
+
 
 
 
