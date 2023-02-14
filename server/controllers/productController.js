@@ -52,15 +52,16 @@ const getOneProduct = async (req, res, next) => {
 // Getting All Products
 const getAllProducts = async (req, res, next) => {
   try {
-    const productsPerPage = 6
+    const productsPerPage = 8
+    const productCount = await ProductData.countDocuments()
     const apiFeatures = new ApiFeature(ProductData.find(), req.query)
       .search()
       .filter()
       .pagination(productsPerPage)
     const allProducts = await apiFeatures.query
-    return res.status(201).json({ msg: "Success", allProducts })
+    return res.status(201).json({ msg: "Success", allProducts, productCount })
   } catch (error) {
-    return res.status(201).json({ msg: "Error", error })
+    return res.status(404).json({ msg: "Error", error })
   }
 }
 

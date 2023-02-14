@@ -4,9 +4,13 @@ const connectDB = require('./db/connection')
 require('dotenv').config()
 const router = require('./routes/routing')
 const cookieParser = require('cookie-parser');
+const cors = require('cors')
 
 
 app.use(express.json())
+app.use(cors({
+  origin:"http://localhost:3000"
+}))
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 
