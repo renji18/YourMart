@@ -61,7 +61,7 @@ router.route('/user/role').put(auth, admin, changeRole) // ADMIN ONLY
 const {
   createProduct,
   updateProduct,
-  getOneProduct,
+  getOneProduct,   // REMOVED AUTH
   getAllProducts,  // REMOVED AUTH
   deleteProduct,
   createReview,
@@ -73,7 +73,7 @@ const {
 // Product Routes
 router.route('/product/create').post(auth, admin, createProduct) // ADMIN ONLY
 router.route('/product/update/:_id').put(auth, admin, updateProduct) // ADMIN ONLY
-router.route('/product/:_id').get(auth, getOneProduct)
+router.route('/product/:_id').get(getOneProduct)
 router.route('/products').get(getAllProducts)
 router.route('/product/delete/:_id').delete(auth, admin, deleteProduct) // ADMIN ONLY
 router.route('/product/writeReview/:_id').post(auth, createReview) 
