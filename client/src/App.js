@@ -6,7 +6,8 @@ import './App.css'
 import webfont from 'webfontloader'
 import Home from './components/HOME/Home.js'
 import ProductDetails from './components/Product/ProductDetails.js'
-import Loader from './components/layout/Loader/Loader.js';
+import Products from './components/Product/Products.js';
+import Search from './components/Product/Search.js'
 
 function App() {
 
@@ -24,6 +25,9 @@ function App() {
       <Routes>
         <Route exact path='/' element={<Home />} />
         <Route exact path='/product/:id' element={<ProductDetails />} />
+        <Route exact path='/products' element={<Products />} />
+        <Route  path='/products/:keyword' element={<Products />} />
+        <Route exact path='/search' element={<Search />} />
       </Routes>
 
       <Footer />

@@ -11,11 +11,17 @@ import {
 
 
 // Get All Products
-export const getProducts = () => async(dispatch) => {
+export const getProducts = (keyword='', currentPage=1, price=[0, 50000], category, ratings=0) => async(dispatch) => {
   try {
     dispatch({type:ALL_PRODUCT_REQUESTS})
-    
-    const data = await axios.get('http://localhost:5000/products')
+
+    let link = `http://localhost:5000/products?keyword=${keyword}&page=${currentPage}&price[gt]=${price[0]}&price[lte]=${price[1]}&overallRating[gte]=${ratings}`
+
+    if(category){
+      link = `http://localhost:5000/products?keyword=${keyword}&page=${currentPage}&price[gt]=${price[0]}&price[lte]=${price[1]}&category=${category}&overallRating[gte]=${ratings}`
+    }
+
+    const data = await axios.get(link) 
 
 
     dispatch({
