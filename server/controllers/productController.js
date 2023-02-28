@@ -54,12 +54,24 @@ const getAllProducts = async (req, res, next) => {
   try {
     const productsPerPage = 8
     const productCount = await ProductData.countDocuments()
-    const apiFeatures = new ApiFeature(ProductData.find(), req.query)
+    let apiFeatures = new ApiFeature(ProductData.find(), req.query)
       .search()
       .filter()
-      .pagination(productsPerPage)
-    const allProducts = await apiFeatures.query
-    return res.status(201).json({ msg: "Success", allProducts, productCount })
+
+    let allProducts = await apiFeatures.query
+    let filteredProductsCount = allProducts.length
+
+    if (filteredProductsCount > productsPerPage) {
+      apiFeatures = new ApiFeature(ProductData.find(), req.query)
+        .search()
+        .filter()
+        .pagination(productsPerPage)
+
+      allProducts = await apiFeatures.query
+    }
+
+
+    return res.status(201).json({ msg: "Success", allProducts, productCount, productsPerPage, filteredProductsCount })
   } catch (error) {
     return res.status(404).json({ msg: "Error", error })
   }
