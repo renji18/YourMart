@@ -6,6 +6,7 @@ import logo from '../../../images/logo.jpeg'
 
 
 const options = {
+  burgerColor: 'white',
   burgerColorHover: "#eb4034",
   logo,
   logoWidth: "10vmax",

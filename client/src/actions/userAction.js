@@ -9,6 +9,8 @@ import {
   LOAD_USER_FAIL,
   LOAD_USER_REQUESTS,
   LOAD_USER_SUCCESS,
+  LOGOUT_FAIL,
+  LOGOUT_SUCCESS,
 } from '../constants/userConstants'
 
 
@@ -82,6 +84,24 @@ export const register = (userData) => async(dispatch) => {
   } catch (error) {
     dispatch({
       type:REGISTER_FAIL,
+      payload:error.response.data.msg
+    })
+  }
+}
+
+// Logout User
+export const logout = () => async(dispatch) => {
+  try {
+
+    await axios.get('/user/logout')
+
+    dispatch({
+      type: LOGOUT_SUCCESS
+    })
+
+  } catch (error) {
+    dispatch({
+      type:LOGOUT_FAIL,
       payload:error.response.data.msg
     })
   }
