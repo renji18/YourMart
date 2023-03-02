@@ -11,29 +11,29 @@ import {
 
 export const productReducer = (state = { products: [] }, action) => {
   switch (action.type) {
-    case ALL_PRODUCT_REQUESTS: 
+    case ALL_PRODUCT_REQUESTS:
       return {
         loading: true,
         allProducts: [],
-      } 
+      }
     case ALL_PRODUCT_SUCCESS:
       return {
         loading: false,
-        productCount:action.payload.data.productCount,
+        productCount: action.payload.data.productCount,
         allProducts: action.payload.data.allProducts,
         productsPerPage: action.payload.data.productsPerPage,
         filteredProductsCount: action.payload.data.filteredProductsCount,
       }
-      case ALL_PRODUCT_FAIL:
+    case ALL_PRODUCT_FAIL:
       return {
         loading: false,
         error: action.payload,
       }
-      case CLEAR_ERRORS:
-        return{
-          ...state,
-          error:null
-        }
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null
+      }
     default:
       return state;
   }
@@ -50,18 +50,18 @@ export const productDetailsReducer = (state = { product: [] }, action) => {
     case PRODUCT_DETAILS_SUCCESS:
       return {
         loading: false,
-        product:action.payload.data.foundProduct,
+        product: action.payload.data.foundProduct,
       }
-      case PRODUCT_DETAILS_FAIL:
+    case PRODUCT_DETAILS_FAIL:
       return {
         loading: false,
         error: action.payload,
       }
-      case CLEAR_ERRORS:
-        return{
-          ...state,
-          error:null
-        }
+    case CLEAR_ERRORS:
+      return {
+        ...state,
+        error: null
+      }
     default:
       return state;
   }

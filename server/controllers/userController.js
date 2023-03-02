@@ -2,23 +2,30 @@ const UserData = require('../models/userSchema')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
 const sendmail = require('../middleware/sendMail')
+const cloudinary = require('cloudinary')
 
 
 // Registering User
 const registerUser = async (req, res, next) => {
   try {
-    const newUser = new UserData(req.body)
-    const token = await newUser.generateToken()
+    const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+      folder: 'avatars',
+      width: 150,
+      crop: 'scale',
+    })
+    const user = new UserData(req.body)
+    user.avatar = {
+      public_id: myCloud.public_id,
+      url: myCloud.secure_url
+    }
+    const token = await user.generateToken()
     if (!token)
       return res.status(404).json({ msg: "Token Not Generated" })
-    await newUser.save()
+    await user.save()
     res.cookie('yourmart', token, {
       httpOnly: true,
-      expires: new Date(
-        Date.now() + 24 * 60 * 60 * 1000
-      )
     })
-    return res.status(201).json({ msg: "Success", newUser })
+    return res.status(201).json({ msg: "Success", user })
   } catch (error) {
     return res.status(500).json({ msg: "Failed", error })
   }
@@ -31,23 +38,20 @@ const userLogin = async (req, res, next) => {
     const { password } = req.body
     if (!email || !password)
       return res.status(404).json({ msg: "Fields Empty" })
-    const userExists = await UserData.findOne({ email })
-    if (!userExists)
+    const user = await UserData.findOne({ email })
+    if (!user)
       return res.status(402).json({ msg: "User doesn't exist" })
-    const isMatch = await bcrypt.compare(password, userExists.password)
+    const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch)
       return res.status(403).json({ msg: "Wrong Credentials" })
-    if (userExists.tokens.length > 5)
-      userExists.tokens = []
-    const token = await userExists.generateToken()
-    await userExists.save()
+    if (user.tokens.length > 5)
+      user.tokens = []
+    const token = await user.generateToken()
+    await user.save()
     res.cookie('yourmart', token, {
       httpOnly: true,
-      expires: new Date(
-        Date.now() + 24 * 60 * 60 * 1000
-      )
     })
-    res.status(201).json({ msg: "Login successful", userExists })
+    res.status(201).json({ msg: "Login successful", user })
   } catch (error) {
     res.status(500).json({ msg: "Login unsuccessful", error })
   }
