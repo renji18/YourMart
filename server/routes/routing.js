@@ -7,7 +7,7 @@ const router  = express.Router()
 
 
 // Root Controller
- 
+
 const homeRoute = async(req, res, next) => {
   try {
     const {yourmart} = req.cookies
@@ -20,7 +20,7 @@ const homeRoute = async(req, res, next) => {
 }
 
 // Root Route
-router.route('/').get(homeRoute)
+router.route('/cookieCheck').get(homeRoute)
 
 
 
@@ -61,8 +61,8 @@ router.route('/user/role').put(auth, admin, changeRole) // ADMIN ONLY
 const {
   createProduct,
   updateProduct,
-  getOneProduct,   // REMOVED AUTH
-  getAllProducts,  // REMOVED AUTH
+  getOneProduct,  
+  getAllProducts, 
   deleteProduct,
   createReview,
   getProductReviews,
@@ -77,7 +77,7 @@ router.route('/product/:_id').get(getOneProduct)
 router.route('/products').get(getAllProducts)
 router.route('/product/delete/:_id').delete(auth, admin, deleteProduct) // ADMIN ONLY
 router.route('/product/writeReview/:_id').post(auth, createReview) 
-router.route('/product/getReviews/:_id').get(auth, getProductReviews) 
+router.route('/product/getReviews/:_id').get(getProductReviews) 
 router.route('/product/deleteReviews/:_id').delete(auth, admin, deleteReview) // ADMIN ONLY
 
 
