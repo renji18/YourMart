@@ -65,8 +65,8 @@ const LoginSignup = () => {
 
   useEffect(() => {
     if (error) {
-      alert.error(error)
       dispatch(clearErrors())
+      alert.error(error)
     }
     if(isAuthenticated){
       navigate('/account')
@@ -75,7 +75,6 @@ const LoginSignup = () => {
 
   const switchTabs = (e, tab) => {
     if (tab === "login") {
-      // document.getElementsByClassName('switcherTabBtn')
       switcherTab.current.classList.add("shiftToNeutral");
       switcherTab.current.classList.remove("shiftToRight");
       registerTab.current.classList.remove("shiftToNeutralForm");
