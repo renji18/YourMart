@@ -10,6 +10,10 @@ import Products from './components/Product/Products.js';
 import Search from './components/Product/Search.js'
 import LoginSignup from './components/User/LoginSignup.js';
 import Profile from './components/User/Profile.js';
+import UpdateProfile from './components/User/UpdateProfile.js';
+import UpdatePassword from './components/User/UpdatePassword.js';
+import ForgotPassword from './components/User/ForgotPassword.js';
+import ResetPassword from './components/User/ResetPassword.js';
 import { loadUser } from './actions/userAction.js';
 import UserOptions from './components/layout/Header/UserOptions.js'
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,8 +43,12 @@ function App() {
         <Route path='/products/:keyword' element={<Products />} />
         <Route exact path='/search' element={<Search />} />
         <Route exact path='/login' element={<LoginSignup />} />
+        <Route exact path='/user/forgotPassword' element={<ForgotPassword />} />
+        <Route path='/user/reset/:token' element={<ResetPassword />} />
       </Routes>
-      <ProtectedRoute options={{path:"/account", exact:true, element:<Profile />}} />
+      <ProtectedRoute options={{ path: "/account", exact: true, element: <Profile /> }} />
+      <ProtectedRoute options={{ path: "/user/profile/update", exact: true, element: <UpdateProfile /> }} />
+      <ProtectedRoute options={{ path: "/user/password/update", exact: true, element: <UpdatePassword /> }} />
 
       <Footer />
     </Router>

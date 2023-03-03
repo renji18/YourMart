@@ -82,10 +82,30 @@ const getAllUsers = async (req, res, next) => {
 // Update User -- Profile
 const updateProfile = async (req, res, next) => {
   try {
-    const updatedUser = await UserData.findOneAndUpdate({ email: req.user.email }, req.body, {
+    const newUserData = {
+      name: req.body.name,
+      email: req.body.email
+    }
+    if (req.body.avatar !== '' && req.body.avatar !== 'undefined') {
+      const user = await UserData.findOne({ email: req.user.email })
+      const imageId = user.avatar.public_id;
+      await cloudinary.v2.uploader.destroy(imageId)
+      const myCloud = await cloudinary.v2.uploader.upload(req.body.avatar, {
+        folder: 'avatars',
+        width: 150,
+        crop: 'scale',
+      })
+      newUserData.avatar = {
+        public_id: myCloud.public_id,
+        url: myCloud.secure_url,
+      }
+    }
+    await UserData.findOneAndUpdate({ email: req.user.email }, newUserData, {
       new: true,
+      runValidators: true,
+      useFindAndModify: false,
     })
-    res.status(201).json({ msg: "Success", updatedUser })
+    res.status(201).json({ msg: "Success", success: true })
   } catch (error) {
     res.status(201).json({ msg: "Error", error })
   }
@@ -98,10 +118,10 @@ const updatePassword = async (req, res, next) => {
     const { newPassword } = req.body
     const { confirmPassword } = req.body
     if (newPassword !== confirmPassword)
-      return res.status(201).json({ msg: "Passwords don't match" })
+      return res.status(404).json({ error: "Passwords don't match" })
     const isMatch = await bcrypt.compare(oldPassword, req.user.password)
     if (!isMatch)
-      return res.status(201).json({ msg: "Incorrect Password" })
+      return res.status(404).json({ error: "Incorrect Password" })
     req.user.password = newPassword
     const token = await req.user.generateToken()
     await req.user.save()
@@ -111,9 +131,9 @@ const updatePassword = async (req, res, next) => {
         Date.now() + 24 * 60 * 60 * 1000
       )
     })
-    res.status(201).json({ msg: "Success", user: req.user })
+    res.status(201).json({ msg: "Success", success: true })
   } catch (error) {
-    res.status(201).json({ msg: "Error", error })
+    res.status(404).json({ msg: "Error", error })
   }
 }
 
@@ -162,14 +182,14 @@ const forgotPassword = async (req, res, next) => {
     foundUser.resetPassword.resetPasswordToken = await foundUser.generateToken()
     foundUser.resetPassword.resetPasswordTime = Date.now()
     await foundUser.save()
-    const resetPasswordUrl = `${req.protocol}://${req.get('host')}/user/reset/${foundUser.resetPassword.resetPasswordToken}`;
-    const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\nIf you have not requested this email, then please ignore it`
+    const resetPasswordUrl = `${process.env.FRONTEND_URL}/user/reset/${foundUser.resetPassword.resetPasswordToken}`;
+    const message = `Your password reset token is :- \n\n ${resetPasswordUrl} \n\nIf you have not requested this email, then please ignore it.`
     await sendmail({
       email: foundUser.email,
-      subject: `Your Mart Password Recovery`,
+      subject: `YourMart Password Recovery`,
       message
     })
-    res.status(200).json({ success: "Success", msg: `Email Sent To ${foundUser.email} successfully`, foundUser, url: resetPasswordUrl })
+    res.status(200).json({ success: "Success", msg: `Email Sent To ${foundUser.email} successfully` })
   } catch (error) {
     res.status(500).json({ success: "Fail", error })
   }
@@ -180,20 +200,21 @@ const forgotPassword = async (req, res, next) => {
 
 const resetPassword = async (req, res, next) => {
   try {
-
     const { token } = req.params
-    const { newPassword } = req.body
+    const { password } = req.body
     const { confirmPassword } = req.body
     const verifyUser = jwt.verify(token, process.env.JWT_SECRET_KEY)
     const foundUser = await UserData.findOne({ _id: verifyUser._id })
-    if ((Date.parse(foundUser.resetPassword.resetPasswordTime) + 300000) < Date.now())
+    if (token !== foundUser.resetPassword.resetPasswordToken)
       return res.status(500).json({ msg: "Token Expired, request email again" })
-    if (newPassword !== confirmPassword)
+    if ((Date.parse(foundUser.resetPassword.resetPasswordTime) + 300000) < Date.now())
+      return res.status(500).json({ msg: "Illegal Token, already Expired" })
+    if (password !== confirmPassword)
       return res.status(500).json({ msg: "Passwords don't match, please check again" })
-    const isMatch = await bcrypt.compare(newPassword, foundUser.password)
+    const isMatch = await bcrypt.compare(password, foundUser.password)
     if (isMatch)
       return res.status(500).json({ msg: "Cannot Use Previous Password As Old Password" })
-    foundUser.password = newPassword
+    foundUser.password = password
     const newToken = await foundUser.generateToken()
     await foundUser.save()
     res.cookie('yourmart', newToken, {
@@ -202,12 +223,13 @@ const resetPassword = async (req, res, next) => {
         Date.now() + 24 * 60 * 60 * 1000
       )
     })
-    return res.status(201).json({ msg: 'Success', foundUser })
+    return res.status(201).json({ msg: 'Success', success: true })
   } catch (error) {
-    return res.status(500).json({ msg: 'error', error })
+    return res.status(500).json({ msg: 'Illegal Token', error })
   }
 }
 
+// Change User Role
 const changeRole = async (req, res, next) => {
   try {
     const { email } = req.body

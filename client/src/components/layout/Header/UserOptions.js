@@ -39,8 +39,8 @@ const UserOptions = ({ user }) => {
   }
   function logoutUser() {
     dispatch(logout())
-    navigate('/login')
     alert.success('Logout Successful')
+    navigate('/')
   }
 
   return (
