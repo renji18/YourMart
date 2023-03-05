@@ -14,6 +14,7 @@ import UpdateProfile from './components/User/UpdateProfile.js';
 import UpdatePassword from './components/User/UpdatePassword.js';
 import ForgotPassword from './components/User/ForgotPassword.js';
 import ResetPassword from './components/User/ResetPassword.js';
+import Cart from './components/Cart/Cart.js'
 import { loadUser } from './actions/userAction.js';
 import UserOptions from './components/layout/Header/UserOptions.js'
 import { useDispatch, useSelector } from 'react-redux';
@@ -43,6 +44,7 @@ function App() {
         <Route path='/products/:keyword' element={<Products />} />
         <Route exact path='/search' element={<Search />} />
         <Route exact path='/login' element={<LoginSignup />} />
+        <Route exact path='/cart' element={<Cart />} />
         <Route exact path='/user/forgotPassword' element={<ForgotPassword />} />
         <Route path='/user/reset/:token' element={<ResetPassword />} />
       </Routes>

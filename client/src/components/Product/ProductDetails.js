@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { clearErrors, getProductDetails } from '../../actions/productAction'
 import { useSelector, useDispatch } from 'react-redux'
 import Loader from '../layout/Loader/Loader.js';
@@ -8,6 +8,7 @@ import Carousel from 'react-material-ui-carousel'
 import './ProductDetails.css'
 import ReviewCard from './ReviewCard.js'
 import ReactStars from 'react-rating-stars-component'
+import { addItemsToCart } from '../../actions/cartAction';
 
 const ProductDetails = () => {
 
@@ -16,7 +17,14 @@ const ProductDetails = () => {
   const dispatch = useDispatch()
   const alert = useAlert()
 
+  const [quantity, setQuantity] = useState(1)
   const { loading, error, product } = useSelector(state => state.productDetails)
+
+
+  const addToCartHandler = () => {
+    dispatch(addItemsToCart(_id, quantity))
+    alert.success('Item Added To Cart')
+  }
 
   useEffect(() => {
     if (error) {
@@ -33,6 +41,19 @@ const ProductDetails = () => {
     precision: 0.5,
   };
 
+  const increaseQuantity = () => {
+    if(product.stock <= quantity) 
+      return
+    const qty = quantity + 1;
+    setQuantity(qty)
+  }
+
+  const decreaseQuantity = () => {
+    if(quantity <= 1)
+      return
+    const qty = quantity - 1;
+    setQuantity(qty)
+  }
 
   return (
     <Fragment>
@@ -71,12 +92,13 @@ const ProductDetails = () => {
                   <h1>{`₹${product.price}`}</h1>
                   <div className="detailsBlock-3-1">
                     <div className="detailsBlock-3-1-1">
-                      <button>-</button>
-                      <input readOnly type="number" value='1' />
-                      <button>+</button>
+                      <button onClick={decreaseQuantity}>-</button>
+                      <input readOnly type="number" value={quantity} />
+                      <button onClick={increaseQuantity}>+</button>
                     </div>
                     <button
                       disabled={product.Stock < 1 ? true : false}
+                      onClick={addToCartHandler}
                     >
                       Add to Cart
                     </button>
@@ -101,7 +123,7 @@ const ProductDetails = () => {
             {product.reviews && product.reviews[0] ? (
               <div className="reviews">
                 {product.reviews &&
-                  product.reviews.map(review => <ReviewCard review={review} />)}
+                  product.reviews.map(review => <ReviewCard review={review} key={review.name} />)}
               </div>
             ) : (
               <p className="noReviews">No Reviews Yet</p>
