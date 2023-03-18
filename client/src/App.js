@@ -15,6 +15,8 @@ import UpdatePassword from './components/User/UpdatePassword.js';
 import ForgotPassword from './components/User/ForgotPassword.js';
 import ResetPassword from './components/User/ResetPassword.js';
 import Cart from './components/Cart/Cart.js'
+import Shipping from './components/Cart/Shipping.js'
+import ConfirmOrder from './components/Cart/ConfirmOrder.js'
 import { loadUser } from './actions/userAction.js';
 import UserOptions from './components/layout/Header/UserOptions.js'
 import { useDispatch, useSelector } from 'react-redux';
@@ -51,6 +53,8 @@ function App() {
       <ProtectedRoute options={{ path: "/account", exact: true, element: <Profile /> }} />
       <ProtectedRoute options={{ path: "/user/profile/update", exact: true, element: <UpdateProfile /> }} />
       <ProtectedRoute options={{ path: "/user/password/update", exact: true, element: <UpdatePassword /> }} />
+      <ProtectedRoute options={{ path: "/shipping", exact: true, element: <Shipping /> }} />
+      <ProtectedRoute options={{ path: "/order/confirm", exact: true, element: <ConfirmOrder /> }} />
 
       <Footer />
     </Router>
