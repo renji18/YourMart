@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(fileUpload())
 
-app.use('/', router)
+app.use('/api', router)
 
 
 const port = process.env.PORT

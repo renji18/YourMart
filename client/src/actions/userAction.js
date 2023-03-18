@@ -33,7 +33,7 @@ export const login = (email, password) => async(dispatch) => {
     dispatch({type: LOGIN_REQUESTS})
 
     const config = {headers: {"Content-Type": "application/json"}}
-    const data = await axios.post('/user/login', {email, password}, config)
+    const data = await axios.post('/api/user/login', {email, password}, config)
     dispatch({
       type: LOGIN_SUCCESS, 
       payload:data
@@ -52,10 +52,10 @@ export const loadUser = () => async(dispatch) => {
   try {
     dispatch({type: LOAD_USER_REQUESTS})
 
-    const logged = await axios.get('/cookieCheck')
+    const logged = await axios.get('/api/cookieCheck')
 
     if(logged.data.msg === 'User Logged In'){
-      const data = await axios.get('/user/profile')
+      const data = await axios.get('/api/user/profile')
       dispatch({
         type: LOAD_USER_SUCCESS, 
         payload:data
@@ -82,7 +82,7 @@ export const register = (userData) => async(dispatch) => {
 
     const config = {headers: {"Content-Type": "multipart/form-data"}}
 
-    const data = await axios.post('/user/register', userData, config)
+    const data = await axios.post('/api/user/register', userData, config)
 
     dispatch({
       type: REGISTER_SUCCESS, 
@@ -101,7 +101,7 @@ export const updateProfile = (userData) => async(dispatch) => {
   try {
     dispatch({type: UPDATE_PROFILE_REQUESTS})
     const config = {headers: {"Content-Type": "multipart/form-data"}}
-    const data = await axios.put('/user/profile/update', userData, config)
+    const data = await axios.put('/api/user/profile/update', userData, config)
     dispatch({
       type: UPDATE_PROFILE_SUCCESS, 
       payload:data
@@ -119,7 +119,7 @@ export const updatePassword = (passwords) => async(dispatch) => {
   try {
     dispatch({type: UPDATE_PASSWORD_REQUESTS})
     const config = {headers: {"Content-Type": "application/json"}}
-    const data = await axios.post('/user/password/update', passwords, config)
+    const data = await axios.post('/api/user/password/update', passwords, config)
     dispatch({
       type: UPDATE_PASSWORD_SUCCESS, 
       payload:data
@@ -135,7 +135,7 @@ export const updatePassword = (passwords) => async(dispatch) => {
 // Logout User
 export const logout = () => async(dispatch) => {
   try {
-    await axios.get('/user/logout')
+    await axios.get('/api/user/logout')
     dispatch({
       type: LOGOUT_SUCCESS
     })
@@ -154,7 +154,7 @@ export const forgotPassword = (email) => async(dispatch) => {
     dispatch({type: FORGOT_PASSWORD_REQUESTS})
 
     const config = {headers: {"Content-Type": "application/json"}}
-    const data = await axios.post('/user/forgotPassword', email, config)
+    const data = await axios.post('/api/user/forgotPassword', email, config)
     dispatch({
       type: FORGOT_PASSWORD_SUCCESS, 
       payload:data
@@ -173,7 +173,7 @@ export const resetPassword = (token, passwords) => async(dispatch) => {
     dispatch({type: RESET_PASSWORD_REQUESTS})
 
     const config = {headers: {"Content-Type": "application/json"}}
-    const data = await axios.put(`/user/reset/${token}`, passwords, config)
+    const data = await axios.put(`/api/user/reset/${token}`, passwords, config)
     dispatch({
       type: RESET_PASSWORD_SUCCESS, 
       payload:data
