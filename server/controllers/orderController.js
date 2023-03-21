@@ -8,12 +8,10 @@ const createOrder = async (req, res, next) => {
     const userInfo = req.user
     const newOrder = new OrderData(req.body)
     newOrder.user = userInfo._id
-    newOrder.shippingInfo.address = userInfo.address
-    newOrder.shippingInfo.number = userInfo.number
     await newOrder.save()
     return res.status(201).json({ msg: "Success", newOrder })
   } catch (error) {
-    return res.status(201).json({ msg: "Error", error })
+    return res.status(404).json({ msg: "Error", error })
   }
 }
 

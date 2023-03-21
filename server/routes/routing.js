@@ -107,4 +107,16 @@ router.route('/order/delete/:_id').delete(auth, admin, deleteOrder) // ADMIN ONL
 
 
 
+
+// Payment Controllers
+const { 
+  processPayment,
+  sendStripeApiKey,
+} = require('../controllers/paymentControllers');
+
+// Payment routes
+router.route('/process/payment').post(auth, processPayment)
+router.route('/stripeapikey').get(auth, sendStripeApiKey)
+
+
 module.exports = router

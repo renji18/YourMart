@@ -3,19 +3,26 @@ const mongoose = require('mongoose')
 const orderSchema = new mongoose.Schema({
   shippingInfo:{
     address:{
-      floorApartment:String,
-      societyStreet:String,
-      city:String,
-      state:String,
-      zipcode:{
-        type:Number,
-        validate(value){
-          if(!value.toString().length === 6)
-            throw new Error("Invalid zipcode")
-        }
-      }
+      type:String,
+      required:true,
     },
-    number :{
+    city:{
+      type:String,
+      required:true,
+    },
+    state:{
+      type:String,
+      required:true,
+    },
+    country:{
+      type:String,
+      required:true,
+    },
+    pinCode:{
+      type:String,
+      required:true,
+    },
+    phoneNo :{
       type:Number,
       requried:true,
     },
@@ -31,6 +38,10 @@ const orderSchema = new mongoose.Schema({
         required:true,
       },
       quantity:{
+        type:Number,
+        required:true,
+      },
+      stock:{
         type:Number,
         required:true,
       },

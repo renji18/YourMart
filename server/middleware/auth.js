@@ -14,7 +14,7 @@ const auth = async(req, res, next) => {
     req.token = yourmart
     next()
   } catch (error) {
-    console.log('Error in authorization');
+    console.log('Error in authorization', error);
   }
 }
 

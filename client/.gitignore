@@ -7,7 +7,7 @@
 
 # testing
 /coverage
-
+changesMadeForLocalhost.txt
 # production
 /build
 
